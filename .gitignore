@@ -1,0 +1,11 @@
+# Miscellaneous
+analysis_options.yaml
+run.bat
+
+# Files and directories created by pub
+.packages
+.pub/
+.dart_tool/
+build/
+packages
+pubspec.lock
