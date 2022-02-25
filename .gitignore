@@ -9,3 +9,6 @@ run.bat
 build/
 packages
 pubspec.lock
+
+# dart doc auto-generated files
+doc/api

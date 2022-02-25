@@ -1,3 +1,3 @@
 part of async_locks;
 
-typedef FutureWaiter = Completer<void>;
+typedef _FutureWaiter = Completer<void>;

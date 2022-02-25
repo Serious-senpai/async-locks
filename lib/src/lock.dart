@@ -2,18 +2,23 @@ part of async_locks;
 
 /// Documentation at https://docs.python.org/3.9/library/asyncio-sync.html#asyncio.Lock
 class Lock {
-  final List<FutureWaiter> _waiters = [];
+  final List<_FutureWaiter> _waiters = [];
   bool _locked = false;
 
+  /// Whether this lock is acquired
   bool locked() => _locked;
 
+  /// Acquire the lock. If the lock has already been acquired then this method will block
+  /// asynchronously until the lock is released.
+  ///
+  /// Always return true.
   Future<bool> acquire() async {
     if (!_locked && _waiters.isEmpty) {
       _locked = true;
       return true;
     }
 
-    var waiter = FutureWaiter();
+    var waiter = _FutureWaiter();
     _waiters.add(waiter);
 
     try {
@@ -26,6 +31,7 @@ class Lock {
     return true;
   }
 
+  /// Release the lock. If the lock isn't acquired then this method does nothing.
   void release() {
     if (_locked) {
       _locked = false;
