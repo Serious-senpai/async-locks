@@ -1,3 +1,3 @@
-part of locks;
+part of async_locks;
 
 typedef FutureWaiter = Completer<void>;

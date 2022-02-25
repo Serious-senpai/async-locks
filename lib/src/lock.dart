@@ -1,4 +1,4 @@
-part of locks;
+part of async_locks;
 
 /// Documentation at https://docs.python.org/3.9/library/asyncio-sync.html#asyncio.Lock
 class Lock {

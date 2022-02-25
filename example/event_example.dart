@@ -1,4 +1,4 @@
-import "package:locks/locks.dart";
+import "package:async_locks/locks.dart";
 
 class Program {
   final event = Event();
