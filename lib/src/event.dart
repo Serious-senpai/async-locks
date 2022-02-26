@@ -4,22 +4,21 @@ part of async_locks;
 ///
 /// See [Python documentation](https://docs.python.org/3.9/library/asyncio-sync.html#asyncio.Event)
 class Event {
-  final List<_FutureWaiter> _waiters = [];
+  final _waiters = <_FutureWaiter>[];
   bool _value = false;
 
   /// Create a new [Event] object with the internal flag set to `false`
   Event();
 
   /// The boolean value of the internal flag.
-  bool isSet() => _value;
+  bool get isSet => _value;
 
   /// Set the internal flag to `true`, wake up any futures waiting for this event.
   void set() {
     if (_value) return;
     _value = true;
 
-    for (int i = 0; i < _waiters.length; i++) {
-      var waiter = _waiters[i];
+    for (var waiter in _waiters) {
       if (!waiter.isCompleted) waiter.complete();
     }
   }
