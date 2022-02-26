@@ -1,3 +1,6 @@
+# 1.1.2
+  - Updated documentation and README
+
 # 1.1.1
   - Fixed potential bug
 
