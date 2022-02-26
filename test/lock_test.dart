@@ -5,11 +5,12 @@ class Program {
   final data = <int>[];
 
   Future<void> runFuture(int n) async {
-    await lock.acquire();
-    for (int i = n * 100; i < n + 100; i++) {
-      data.add(i);
-    }
-    lock.release();
+    await lock.run(() async {
+      for (int i = n * 100; i < n + 100; i++) {
+        data.add(i);
+        await Future.delayed(const Duration(seconds: 0));
+      }
+    });
   }
 
   Future<void> run() async {

@@ -8,7 +8,7 @@ class Event {
   /// The boolean value of the internal flag.
   bool isSet() => _value;
 
-  /// Set the internal flag to true, wake up any futures waiting for this event.
+  /// Set the internal flag to `true`, wake up any futures waiting for this event.
   void set() {
     if (_value) return;
     _value = true;
@@ -19,14 +19,14 @@ class Event {
     }
   }
 
-  /// Set the internal flag to false, asynchronously block any futures waiting for this
+  /// Set the internal flag to `false`, asynchronously block any futures waiting for this
   /// event until [set] is called.
   void clear() => _value = false;
 
-  /// Wait for the internal flag to become true. If it is true already then this future
+  /// Wait for the internal flag to become `true`. If it is true already then this future
   /// will return immediately.
   ///
-  /// Always return true.
+  /// Always return `true`.
   Future<bool> wait() async {
     if (_value) return true;
 

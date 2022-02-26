@@ -11,7 +11,10 @@ class Lock {
   /// Acquire the lock. If the lock has already been acquired then this method will block
   /// asynchronously until the lock is released.
   ///
-  /// Always return true.
+  /// When multiple futures are waiting for the lock, only the first one proceeds when
+  /// the lock is available.
+  ///
+  /// Always return `true`.
   Future<bool> acquire() async {
     if (!_locked && _waiters.isEmpty) {
       _locked = true;
