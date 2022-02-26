@@ -47,9 +47,12 @@ class Lock {
   /// The returned value is the result of [func]
   Future<T> run<T>(Future<T> Function() func) async {
     await acquire();
-    var result = await func();
-    release();
-    return result;
+    try {
+      var result = await func();
+      return result;
+    } finally {
+      release();
+    }
   }
 
   void _wakeUpFirst() {

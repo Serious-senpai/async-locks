@@ -1,3 +1,6 @@
+# 1.1.1
+  - Fixed potential bug
+
 # 1.1.0
   - Added `run` method for `Lock`
   - Updated documentation and example
