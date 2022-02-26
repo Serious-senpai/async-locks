@@ -1,20 +1,25 @@
 part of async_locks;
 
-/// Documentation at https://docs.python.org/3.9/library/asyncio-sync.html#asyncio.Lock
+/// Mutex lock to guarantee exclusive access to a shared state.
+///
+/// See [Python documentation](https://docs.python.org/3.9/library/asyncio-sync.html#asyncio.Lock)
 class Lock {
   final List<_FutureWaiter> _waiters = [];
   bool _locked = false;
 
+  /// Create a new [Lock] object.
+  Lock();
+
   /// Whether this lock is acquired
   bool locked() => _locked;
 
-  /// Acquire the lock. If the lock has already been acquired then this method will block
+  /// Acquire the lock. If the lock has already been acquired then this method will wait
   /// asynchronously until the lock is released.
   ///
   /// When multiple futures are waiting for the lock, only the first one proceeds when
   /// the lock is available.
   ///
-  /// Always return `true`.
+  /// This method always returns `true`.
   Future<bool> acquire() async {
     if (!_locked && _waiters.isEmpty) {
       _locked = true;
