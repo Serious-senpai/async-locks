@@ -8,9 +8,7 @@ class Program {
 
   Future<void> runFuture(int n) async {
     var file = File("example.txt");
-    await lock.acquire();
-    await file.writeAsString("Writing from Future-$n\n", mode: FileMode.append, flush: true);
-    lock.release();
+    await lock.run(() async => await file.writeAsString("Writing from Future-$n\n", mode: FileMode.append, flush: true));
   }
 
   Future<void> run() async {

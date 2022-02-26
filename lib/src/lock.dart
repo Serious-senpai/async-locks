@@ -39,6 +39,16 @@ class Lock {
     }
   }
 
+  /// Acquire the lock, asynchronously run [func] and release the lock afterwards.
+  ///
+  /// The returned value is the result of [func]
+  Future<T> run<T>(Future<T> Function() func) async {
+    await acquire();
+    var result = await func();
+    release();
+    return result;
+  }
+
   void _wakeUpFirst() {
     if (_waiters.isEmpty) return;
 
