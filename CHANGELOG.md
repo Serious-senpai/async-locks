@@ -1,3 +1,7 @@
+# 2.0.0
+  - Added `Lock.waiters` and `Event.waiters` attributes
+  - `Lock.locked` and `Event.isSet` become properties
+
 # 1.1.2
   - Updated documentation and README
 
