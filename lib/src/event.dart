@@ -13,6 +13,9 @@ class Event {
   /// The boolean value of the internal flag.
   bool get isSet => _value;
 
+  /// Number of futures which are currently waiting for this Event to set.
+  int get waiters => _waiters.length;
+
   /// Set the internal flag to `true`, wake up any futures waiting for this event.
   void set() {
     if (_value) return;
@@ -26,7 +29,7 @@ class Event {
   /// Set the internal flag to `false`.
   void clear() => _value = false;
 
-  /// Wait for the internal flag to become `true`. If it is true already then this future
+  /// Wait for the internal flag to become `true`. If it is `true` already then this method
   /// will return immediately.
   ///
   /// This method always returns `true`.

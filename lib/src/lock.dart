@@ -13,6 +13,9 @@ class Lock {
   /// Whether this lock is acquired
   bool get locked => _locked;
 
+  /// Number of futures which are currently waiting to acquire this lock.
+  int get waiters => _waiters.length;
+
   /// Acquire the lock. If the lock has already been acquired then this method will wait
   /// asynchronously until the lock is released.
   ///
