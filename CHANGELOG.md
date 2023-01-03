@@ -1,3 +1,6 @@
+# 3.0.0
+  - `Event.wait` and `Lock.acquire` do not return `true` anymore
+
 # 2.0.0
   - Added `Lock.waiters` and `Event.waiters` attributes
   - `Lock.locked` and `Event.isSet` become properties
