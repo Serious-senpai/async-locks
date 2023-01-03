@@ -4,26 +4,26 @@ import "package:async_locks/async_locks.dart";
 import "package:test/test.dart";
 
 const String filename = "example.test";
-const int futures_count = 10;
+const int futures_count = 100;
 late final Matcher matcher;
 
 class Program {
   final lock = Lock();
 
-  Future<void> runWithLock(int n) async {
+  Future<void> runWithLock(int value) async {
     var file = File(filename);
-    await lock.run(() async => await file.writeAsString("Writing from Future-$n\n", mode: FileMode.append, flush: true));
+    await lock.run(() async => await file.writeAsString("Writing from Future-$value\n", mode: FileMode.append, flush: true));
   }
 
-  Future<void> runWithoutLock(int n) async {
+  Future<void> runWithoutLock(int value) async {
     var file = File(filename);
-    await file.writeAsString("Writing from Future-$n\n", mode: FileMode.append, flush: true);
+    await file.writeAsString("Writing from Future-$value\n", mode: FileMode.append, flush: true);
   }
 
   Future<void> runWithLockInvoker() async {
-    var futures = <Future>[];
-    for (int _t = 0; _t < futures_count; _t++) {
-      futures.add(runWithLock(_t));
+    var futures = <Future<void>>[];
+    for (int value = 0; value < futures_count; value++) {
+      futures.add(runWithLock(value));
     }
 
     await Future.wait(futures, eagerError: true);
@@ -32,9 +32,9 @@ class Program {
   }
 
   Future<void> runWithoutLockInvoker() async {
-    var futures = <Future>[];
-    for (int _t = 0; _t < futures_count; _t++) {
-      futures.add(runWithoutLock(_t));
+    var futures = <Future<void>>[];
+    for (int value = 0; value < futures_count; value++) {
+      futures.add(runWithoutLock(value));
     }
 
     await Future.wait(futures, eagerError: true);
@@ -45,8 +45,8 @@ class Program {
 
 void main() async {
   var expected_content = "";
-  for (int _t = 0; _t < futures_count; _t++) {
-    expected_content += "Writing from Future-$_t\n";
+  for (int value = 0; value < futures_count; value++) {
+    expected_content += "Writing from Future-$value\n";
   }
   matcher = equals(expected_content);
 
