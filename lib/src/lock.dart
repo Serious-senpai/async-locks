@@ -21,12 +21,10 @@ class Lock {
   ///
   /// When multiple futures are waiting for the lock, only the first one proceeds when
   /// the lock is available.
-  ///
-  /// This method always returns `true`.
-  Future<bool> acquire() async {
+  Future<void> acquire() async {
     if (!_locked && _waiters.isEmpty) {
       _locked = true;
-      return true;
+      return;
     }
 
     var waiter = _FutureWaiter();
@@ -39,7 +37,7 @@ class Lock {
     }
 
     _locked = true;
-    return true;
+    return;
   }
 
   /// Release the lock. If the lock isn't acquired then this method does nothing.

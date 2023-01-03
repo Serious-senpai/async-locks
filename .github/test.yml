@@ -1,0 +1,35 @@
+name: Package Test
+
+on: push
+
+permissions:
+  actions: read
+  contents: read
+
+jobs:
+  test:
+    name: Run package tests
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        sdk: [2.14.0, 2.18.0]
+
+    steps:
+
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Setup Dart
+      uses: dart-lang/setup-dart@v1.3
+      with:
+        sdk: ${{ matrix.sdk }}
+
+    - name: Install dependencies
+      run: dart pub get
+
+    - name: Analyze package
+      run: dart analyze
+
+    - name: Run package tests
+      run: dart test test

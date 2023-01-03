@@ -1,32 +1,69 @@
+import "dart:io";
+
 import "package:async_locks/async_locks.dart";
+import "package:test/test.dart";
+
+const String filename = "example.test";
+const int futures_count = 10;
+late final Matcher matcher;
 
 class Program {
   final lock = Lock();
-  final data = <int>[];
 
-  Future<void> runFuture(int n) async {
-    await lock.run(() async {
-      for (int i = n * 100; i < n + 100; i++) {
-        data.add(i);
-        await Future.delayed(const Duration(seconds: 0));
-      }
-    });
+  Future<void> runWithLock(int n) async {
+    var file = File(filename);
+    await lock.run(() async => await file.writeAsString("Writing from Future-$n\n", mode: FileMode.append, flush: true));
   }
 
-  Future<void> run() async {
-    await Future.wait([runFuture(1), runFuture(2), runFuture(3), runFuture(4)]);
+  Future<void> runWithoutLock(int n) async {
+    var file = File(filename);
+    await file.writeAsString("Writing from Future-$n\n", mode: FileMode.append, flush: true);
   }
-}
 
-bool incrementList(List<int> data) {
-  for (int i = 0; i < data.length - 2; i++) {
-    if (data[i] > data[i + 1]) return false;
+  Future<void> runWithLockInvoker() async {
+    var futures = <Future>[];
+    for (int _t = 0; _t < futures_count; _t++) {
+      futures.add(runWithLock(_t));
+    }
+
+    await Future.wait(futures, eagerError: true);
+
+    expect(await File(filename).readAsString(), matcher);
   }
-  return true;
+
+  Future<void> runWithoutLockInvoker() async {
+    var futures = <Future>[];
+    for (int _t = 0; _t < futures_count; _t++) {
+      futures.add(runWithoutLock(_t));
+    }
+
+    await Future.wait(futures, eagerError: true);
+
+    expect(await File(filename).readAsString(), isNot(matcher));
+  }
 }
 
 void main() async {
+  var expected_content = "";
+  for (int _t = 0; _t < futures_count; _t++) {
+    expected_content += "Writing from Future-$_t\n";
+  }
+  matcher = equals(expected_content);
+
+  var file = File(filename);
+  if (await file.exists()) {
+    await file.delete();
+  }
+
   var program = Program();
-  await program.run();
-  print(incrementList(program.data) ? "Test succeeded" : "Test failed");
+
+  test(
+    "Concurrent write to a file with a lock",
+    program.runWithLockInvoker,
+  );
+
+  test(
+    "Concurrent write to a file without a lock",
+    program.runWithoutLockInvoker,
+  );
 }

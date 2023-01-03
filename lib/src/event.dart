@@ -31,17 +31,15 @@ class Event {
 
   /// Wait for the internal flag to become `true`. If it is `true` already then this method
   /// will return immediately.
-  ///
-  /// This method always returns `true`.
-  Future<bool> wait() async {
-    if (_value) return true;
+  Future<void> wait() async {
+    if (_value) return;
 
     var waiter = _FutureWaiter();
     _waiters.add(waiter);
 
     try {
       await waiter.future;
-      return true;
+      return;
     } finally {
       _waiters.remove(waiter);
     }
