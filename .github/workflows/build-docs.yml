@@ -1,0 +1,28 @@
+name: Documentation Build
+
+on: push
+
+permissions:
+  actions: read
+  contents: read
+
+jobs:
+  test:
+    name: Build docs test
+    runs-on: ubuntu-latest
+
+    steps:
+
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Setup Dart
+      uses: dart-lang/setup-dart@v1.3
+      with:
+        sdk: 2.18.6
+
+    - name: Install dependencies
+      run: dart pub get
+
+    - name: Build documentation
+      run: dart doc .
