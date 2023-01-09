@@ -5,19 +5,14 @@ import "package:test/test.dart";
 
 import "utils.dart";
 
-const futures_count = 5;
+const futures_count = 20;
+const concurrency = 4;
 
-final event = Event();
+final semaphore = Semaphore(concurrency);
 final waiting = const Duration(seconds: 1);
 
 Future<void> sampleFuture() async {
-  await event.wait();
-  await Future.delayed(waiting);
-}
-
-Future<void> mainFuture() async {
-  await Future.delayed(waiting);
-  event.set();
+  await semaphore.run(() => Future.delayed(waiting));
 }
 
 void main() {
@@ -28,14 +23,13 @@ void main() {
       for (int i = 0; i < futures_count; i++) {
         futures.add(sampleFuture());
       }
-      futures.add(mainFuture());
 
       var timer = Stopwatch();
       timer.start();
       await Future.wait(futures);
       timer.stop();
 
-      expect(timer.elapsedMilliseconds, approximates(2000, 100));
+      expect(timer.elapsedMilliseconds, approximates(1000 * futures_count / concurrency, 100));
     },
   );
 }

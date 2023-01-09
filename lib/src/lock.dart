@@ -4,13 +4,13 @@ part of async_locks;
 ///
 /// See [Python documentation](https://docs.python.org/3.9/library/asyncio-sync.html#asyncio.Lock)
 class Lock {
-  final _waiters = <_FutureWaiter>[];
+  final _waiters = ListQueue<_FutureWaiter>();
   bool _locked = false;
 
   /// Create a new [Lock] object.
   Lock();
 
-  /// Whether this lock is acquired
+  /// Whether this lock is acquired.
   bool get locked => _locked;
 
   /// Number of futures which are currently waiting to acquire this lock.
@@ -30,21 +30,19 @@ class Lock {
     var waiter = _FutureWaiter();
     _waiters.add(waiter);
 
-    try {
-      await waiter.future;
-    } finally {
-      _waiters.remove(waiter);
-    }
-
-    _locked = true;
+    await waiter.future;
     return;
   }
 
   /// Release the lock. If the lock isn't acquired then this method does nothing.
   void release() {
     if (_locked) {
-      _locked = false;
-      _wakeUpFirst();
+      if (_waiters.isEmpty) {
+        _locked = false;
+      } else {
+        var waiter = _waiters.removeFirst();
+        waiter.complete();
+      }
     }
   }
 
@@ -58,17 +56,6 @@ class Lock {
       return result;
     } finally {
       release();
-    }
-  }
-
-  void _wakeUpFirst() {
-    if (_waiters.isEmpty) return;
-
-    for (var waiter in _waiters) {
-      if (!waiter.isCompleted) {
-        waiter.complete();
-        return;
-      }
     }
   }
 }
