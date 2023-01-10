@@ -28,6 +28,7 @@ void main() {
       await Future.wait(futures);
       timer.stop();
 
+      expect(semaphore.locked, isFalse);
       expect(timer.elapsedMilliseconds, approximates(1000 * futures_count / concurrency, 100));
       print("Elapsed time: ${timer.elapsedMilliseconds} ms");
     },

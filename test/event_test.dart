@@ -34,6 +34,7 @@ void main() {
       await Future.wait(futures);
       timer.stop();
 
+      expect(event.isSet, isTrue);
       expect(timer.elapsedMilliseconds, approximates(1000 * 2, 100));
       print("Elapsed time: ${timer.elapsedMilliseconds} ms");
     },
