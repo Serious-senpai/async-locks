@@ -8,7 +8,6 @@ import "utils.dart";
 const futures_count = 5;
 
 final event = Event();
-final waiting = const Duration(seconds: 1);
 
 Future<void> sampleFuture() async {
   await event.wait();
@@ -35,7 +34,8 @@ void main() {
       await Future.wait(futures);
       timer.stop();
 
-      expect(timer.elapsedMilliseconds, approximates(2000, 100));
+      expect(timer.elapsedMilliseconds, approximates(1000 * 2, 100));
+      print("Elapsed time: ${timer.elapsedMilliseconds} ms");
     },
   );
 }

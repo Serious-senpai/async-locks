@@ -9,7 +9,6 @@ const futures_count = 20;
 const concurrency = 4;
 
 final semaphore = Semaphore(concurrency);
-final waiting = const Duration(seconds: 1);
 
 Future<void> sampleFuture() async {
   await semaphore.run(() => Future.delayed(waiting));
@@ -30,6 +29,7 @@ void main() {
       timer.stop();
 
       expect(timer.elapsedMilliseconds, approximates(1000 * futures_count / concurrency, 100));
+      print("Elapsed time: ${timer.elapsedMilliseconds} ms");
     },
   );
 }

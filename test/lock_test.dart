@@ -8,10 +8,14 @@ import "utils.dart";
 const futures_count = 5;
 
 final lock = Lock();
-final waiting = const Duration(seconds: 1);
 
 Future<void> sampleFuture() async {
   await lock.run(() => Future.delayed(waiting));
+}
+
+Future<void> lockingCheckFuture() async {
+  await Future.delayed(short_waiting);
+  expect(lock.locked, isTrue);
 }
 
 void main() {
@@ -22,6 +26,7 @@ void main() {
       for (int i = 0; i < futures_count; i++) {
         futures.add(sampleFuture());
       }
+      futures.add(lockingCheckFuture());
 
       var timer = Stopwatch();
       timer.start();
@@ -29,6 +34,7 @@ void main() {
       timer.stop();
 
       expect(timer.elapsedMilliseconds, approximates(1000 * futures_count, 100));
+      print("Elapsed time: ${timer.elapsedMilliseconds} ms");
     },
   );
 }
