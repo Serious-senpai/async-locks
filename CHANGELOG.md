@@ -1,3 +1,7 @@
+# 3.1.0
+  - Added `Semaphore`
+  - Improve documentation
+
 # 3.0.0
   - `Event.wait` and `Lock.acquire` do not return `true` anymore
 
