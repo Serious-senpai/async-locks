@@ -16,6 +16,7 @@ Future<void> sampleFuture() async {
 
 Future<void> mainFuture() async {
   await Future.delayed(waiting);
+  expect(event.isSet, isFalse);
   event.set();
 }
 

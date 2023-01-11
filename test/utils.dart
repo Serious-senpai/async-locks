@@ -5,5 +5,5 @@ final short_waiting = const Duration(milliseconds: 500);
 
 Matcher approximates(num expected, num max_difference) {
   assert(max_difference >= 0);
-  return inExclusiveRange(expected - max_difference, expected + max_difference);
+  return inInclusiveRange(expected - max_difference, expected + max_difference);
 }
