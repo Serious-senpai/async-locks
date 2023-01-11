@@ -1,8 +1,15 @@
 part of async_locks;
 
-/// An event object to notify multiple futures that an event has happened.
+/// Event object to notify multiple futures that an event has happened.
 ///
-/// See [Python documentation](https://docs.python.org/3.9/library/asyncio-sync.html#asyncio.Event)
+/// An event object manages an internal flag. If the flag is `true`, any calls to [wait] will
+/// return immediately. If the flag is `false`, the [wait] method will suspend the current future
+/// and wait for the flag to become `true` before returning.
+///
+/// The internal flag can be switched by [set] and [clear] methods. The [isSet] property check
+/// if the flag is currently `true`.
+///
+/// See also: [Python documentation](https://docs.python.org/3.9/library/asyncio-sync.html#asyncio.Event)
 class Event {
   final _waiters = <_FutureWaiter>[];
   bool _flag = false;

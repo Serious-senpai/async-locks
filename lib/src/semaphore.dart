@@ -2,24 +2,31 @@ part of async_locks;
 
 /// Semaphore object which allows a number of futures to acquire it.
 ///
-/// See [Python documentation](https://docs.python.org/3.9/library/asyncio-sync.html#asyncio.Semaphore)
+/// A semaphore object keeps track of an internal counter. The internal counter is decremented
+/// each time a future calls [acquire] and incremented for each [release] call.
+///
+/// See also: [Python documentation](https://docs.python.org/3.9/library/asyncio-sync.html#asyncio.Semaphore)
 class Semaphore {
   final _waiters = ListQueue<_FutureWaiter>();
   int _value;
 
-  /// Create a new [Semaphore] object with the initial internal value set to [value].
+  /// Create a new [Semaphore] object with the initial internal counter set to [value].
   Semaphore(int value) : _value = value;
 
   /// Whether this semaphore cannot be acquired immediately.
   bool get locked => _value == 0;
 
   /// Number of futures which are currently waiting to acquire this semaphore.
+  ///
+  /// This is the length of the waiting queue.
   int get waiters => _waiters.length;
 
   /// Acquire the semaphore.
+  /// If the internal counter is greater then 0, decrease it by 1 and return immediately.
+  /// If the internal counter equals 0, wait asynchronously until the semaphore is available.
   ///
-  /// If the internal value is greater then 0, decrease it by 1 and return immediately.
-  /// If the internal value equals 0, wait asynchronously until another future calls [release].
+  /// When multiple futures are waiting for the semaphore, they will be put in a queue and only
+  /// the first one will proceed when the semaphore is available.
   Future<void> acquire() async {
     if (_value > 0 && _waiters.isEmpty) {
       _value--;
@@ -33,7 +40,7 @@ class Semaphore {
     return;
   }
 
-  /// Increase the internal value by 1 and may wake up a future waiting for this semaphore.
+  /// Increase the internal counter by 1 and may wake up a future waiting to acquire this semaphore.
   void release() {
     if (_waiters.isEmpty) {
       _value++;

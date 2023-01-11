@@ -1,4 +1,4 @@
-/// Synchronization Primitives
+/// Synchronization primitives for asynchronous Dart code.
 ///
 /// See also:
 /// - [Python documentation](https://docs.python.org/3.9/library/asyncio-sync.html)
