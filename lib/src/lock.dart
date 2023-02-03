@@ -68,4 +68,13 @@ class Lock {
       release();
     }
   }
+
+  /// Cancel all futures waiting for this [Lock] to be available by throwing a
+  /// [LockAcquireFailureException] to them.
+  void cancelAll() {
+    while (_waiters.isNotEmpty) {
+      var waiter = _waiters.removeFirst();
+      waiter.completeError(LockAcquireFailureException);
+    }
+  }
 }

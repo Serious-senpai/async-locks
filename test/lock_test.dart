@@ -38,4 +38,22 @@ void main() {
       print("Elapsed time: ${timer.elapsedMilliseconds} ms");
     },
   );
+
+  test(
+    "Test lock acquire cancellation",
+    () async {
+      var futures = <Future<void>>[];
+      for (int i = 0; i < futures_count; i++) {
+        futures.add(sampleFuture());
+      }
+
+      expect(
+        () async {
+          lock.cancelAll();
+          await Future.wait(futures);
+        },
+        throwsA(LockAcquireFailureException),
+      );
+    },
+  );
 }

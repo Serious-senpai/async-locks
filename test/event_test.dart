@@ -40,4 +40,24 @@ void main() {
       print("Elapsed time: ${timer.elapsedMilliseconds} ms");
     },
   );
+
+  test(
+    "Test event waiting cancellation",
+    () async {
+      event.clear();
+
+      var futures = <Future<void>>[];
+      for (int i = 0; i < futures_count; i++) {
+        futures.add(sampleFuture());
+      }
+
+      expect(
+        () async {
+          event.cancelAll();
+          await Future.wait(futures);
+        },
+        throwsA(EventCancelledException),
+      );
+    },
+  );
 }

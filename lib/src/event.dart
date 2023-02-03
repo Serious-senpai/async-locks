@@ -31,6 +31,8 @@ class Event {
     for (var waiter in _waiters) {
       if (!waiter.isCompleted) waiter.complete();
     }
+
+    _waiters.clear();
   }
 
   /// Set the internal flag to `false`.
@@ -50,5 +52,15 @@ class Event {
     } finally {
       _waiters.remove(waiter);
     }
+  }
+
+  /// Cancel all futures waiting for this [Event] to be set (those that are waiting for [wait]
+  /// to return). This function throws an [EventCancelledException] to all these futures.
+  void cancelAll() {
+    for (var waiter in _waiters) {
+      waiter.completeError(EventCancelledException);
+    }
+
+    _waiters.clear();
   }
 }

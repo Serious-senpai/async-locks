@@ -62,4 +62,13 @@ class Semaphore {
       release();
     }
   }
+
+  /// Cancel all futures waiting for this [Semaphore] to be available by throwing a
+  /// [SemaphoreAcquireFailureException] to them.
+  void cancelAll() {
+    while (_waiters.isNotEmpty) {
+      var waiter = _waiters.removeFirst();
+      waiter.completeError(SemaphoreAcquireFailureException);
+    }
+  }
 }
