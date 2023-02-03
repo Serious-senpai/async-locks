@@ -1,3 +1,6 @@
+# 3.2.0
+  - Allow cancelling all waiting futures
+
 # 3.1.0
   - Added `Semaphore`
   - Improve documentation
