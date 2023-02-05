@@ -28,9 +28,6 @@ class Lock {
 
   /// Acquire the lock. If the lock has already been acquired then this method will wait
   /// asynchronously until the lock is released.
-  ///
-  /// When multiple futures are waiting for the lock, they will be put in a queue and only
-  /// the first one will proceed when the lock is available.
   Future<void> acquire() async {
     if (!_locked && _waiters.isEmpty) {
       _locked = true;
@@ -40,8 +37,7 @@ class Lock {
     var waiter = _FutureWaiter();
     _waiters.add(waiter);
 
-    await waiter.future;
-    return;
+    return waiter.future;
   }
 
   /// Release the lock. If the lock isn't acquired then this method does nothing.
@@ -50,11 +46,13 @@ class Lock {
       if (_waiters.isEmpty) {
         _locked = false;
       } else {
-        var waiter = _waiters.removeFirst();
+        var waiter = _getNextWaiter();
         waiter.complete();
       }
     }
   }
+
+  _FutureWaiter _getNextWaiter() => _waiters.removeFirst();
 
   /// Acquire the lock, asynchronously run [func] and release the lock afterwards.
   ///
@@ -77,4 +75,14 @@ class Lock {
       waiter.completeError(LockAcquireFailureException);
     }
   }
+}
+
+/// An [UnfairLock] object is identical to a [Lock] excepts that it wakes up the
+/// last future that called [acquire] instead of the first
+class UnfairLock extends Lock {
+  /// Create a new [UnfairLock] object.
+  UnfairLock();
+
+  @override
+  _FutureWaiter _getNextWaiter() => _waiters.removeLast();
 }

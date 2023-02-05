@@ -46,12 +46,7 @@ class Event {
     var waiter = _FutureWaiter();
     _waiters.add(waiter);
 
-    try {
-      await waiter.future;
-      return;
-    } finally {
-      _waiters.remove(waiter);
-    }
+    return waiter.future;
   }
 
   /// Cancel all futures waiting for this [Event] to be set (those that are waiting for [wait]
