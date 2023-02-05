@@ -8,47 +8,49 @@ import "utils.dart";
 const futures_count = 20;
 const concurrency = 4;
 
-final semaphore = Semaphore(concurrency);
-
-Future<void> sampleFuture() async {
+Future<void> sampleFuture(Semaphore semaphore) async {
   await semaphore.run(() => Future.delayed(waiting));
 }
 
 void main() {
-  test(
-    "Testing control flow",
-    () async {
-      var futures = <Future<void>>[];
-      for (int i = 0; i < futures_count; i++) {
-        futures.add(sampleFuture());
-      }
+  var semaphores = <Semaphore>[Semaphore(concurrency), UnfairSemaphore(concurrency)];
 
-      var timer = Stopwatch();
-      timer.start();
-      await Future.wait(futures);
-      timer.stop();
+  for (var semaphore in semaphores) {
+    test(
+      "Testing control flow: $semaphore",
+      () async {
+        var futures = <Future<void>>[];
+        for (int i = 0; i < futures_count; i++) {
+          futures.add(sampleFuture(semaphore));
+        }
 
-      expect(semaphore.locked, isFalse);
-      expect(timer.elapsedMilliseconds, approximates(1000 * futures_count / concurrency, 100));
-      print("Elapsed time: ${timer.elapsedMilliseconds} ms");
-    },
-  );
+        var timer = Stopwatch();
+        timer.start();
+        await Future.wait(futures);
+        timer.stop();
 
-  test(
-    "Test semaphore acquire cancellation",
-    () async {
-      var futures = <Future<void>>[];
-      for (int i = 0; i < futures_count; i++) {
-        futures.add(sampleFuture());
-      }
+        expect(semaphore.locked, isFalse);
+        expect(timer.elapsedMilliseconds, approximates(1000 * futures_count / concurrency, 100));
+        print("Elapsed time: ${timer.elapsedMilliseconds} ms");
+      },
+    );
 
-      expect(
-        () async {
-          semaphore.cancelAll();
-          await Future.wait(futures);
-        },
-        throwsA(SemaphoreAcquireFailureException),
-      );
-    },
-  );
+    test(
+      "Test semaphore acquire cancellation: $semaphore",
+      () async {
+        var futures = <Future<void>>[];
+        for (int i = 0; i < futures_count; i++) {
+          futures.add(sampleFuture(semaphore));
+        }
+
+        expect(
+          () async {
+            semaphore.cancelAll();
+            await Future.wait(futures);
+          },
+          throwsA(SemaphoreAcquireFailureException),
+        );
+      },
+    );
+  }
 }

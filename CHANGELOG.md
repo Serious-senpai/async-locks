@@ -1,3 +1,6 @@
+# 3.3.0
+  - Added `UnfairLock` and `UnfairSemaphore`
+
 # 3.2.0
   - Allow cancelling all waiting futures
 

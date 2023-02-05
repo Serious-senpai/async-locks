@@ -7,53 +7,55 @@ import "utils.dart";
 
 const futures_count = 5;
 
-final lock = Lock();
-
-Future<void> sampleFuture() async {
+Future<void> sampleFuture(Lock lock) async {
   await lock.run(() => Future.delayed(waiting));
 }
 
-Future<void> lockingCheckFuture() async {
+Future<void> lockingCheckFuture(Lock lock) async {
   await Future.delayed(short_waiting);
   expect(lock.locked, isTrue);
 }
 
 void main() {
-  test(
-    "Testing control flow",
-    () async {
-      var futures = <Future<void>>[];
-      for (int i = 0; i < futures_count; i++) {
-        futures.add(sampleFuture());
-      }
-      futures.add(lockingCheckFuture());
+  var locks = <Lock>[Lock(), UnfairLock()];
 
-      var timer = Stopwatch();
-      timer.start();
-      await Future.wait(futures);
-      timer.stop();
+  for (var lock in locks) {
+    test(
+      "Testing control flow: $lock",
+      () async {
+        var futures = <Future<void>>[];
+        for (int i = 0; i < futures_count; i++) {
+          futures.add(sampleFuture(lock));
+        }
+        futures.add(lockingCheckFuture(lock));
 
-      expect(lock.locked, isFalse);
-      expect(timer.elapsedMilliseconds, approximates(1000 * futures_count, 100));
-      print("Elapsed time: ${timer.elapsedMilliseconds} ms");
-    },
-  );
+        var timer = Stopwatch();
+        timer.start();
+        await Future.wait(futures);
+        timer.stop();
 
-  test(
-    "Test lock acquire cancellation",
-    () async {
-      var futures = <Future<void>>[];
-      for (int i = 0; i < futures_count; i++) {
-        futures.add(sampleFuture());
-      }
+        expect(lock.locked, isFalse);
+        expect(timer.elapsedMilliseconds, approximates(1000 * futures_count, 100));
+        print("Elapsed time: ${timer.elapsedMilliseconds} ms");
+      },
+    );
 
-      expect(
-        () async {
-          lock.cancelAll();
-          await Future.wait(futures);
-        },
-        throwsA(LockAcquireFailureException),
-      );
-    },
-  );
+    test(
+      "Test lock acquire cancellation: $lock",
+      () async {
+        var futures = <Future<void>>[];
+        for (int i = 0; i < futures_count; i++) {
+          futures.add(sampleFuture(lock));
+        }
+
+        expect(
+          () async {
+            lock.cancelAll();
+            await Future.wait(futures);
+          },
+          throwsA(LockAcquireFailureException),
+        );
+      },
+    );
+  }
 }

@@ -22,7 +22,7 @@ Future<void> mainFuture() async {
 
 void main() {
   test(
-    "Testing control flow",
+    "Testing control flow: $event",
     () async {
       var futures = <Future<void>>[];
       for (int i = 0; i < futures_count; i++) {
@@ -42,7 +42,7 @@ void main() {
   );
 
   test(
-    "Test event waiting cancellation",
+    "Test event waiting cancellation: $event",
     () async {
       event.clear();
 
