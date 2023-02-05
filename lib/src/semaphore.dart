@@ -69,7 +69,7 @@ class Semaphore {
   void cancelAll() {
     while (_waiters.isNotEmpty) {
       var waiter = _waiters.removeFirst();
-      waiter.completeError(SemaphoreAcquireFailureException);
+      waiter.completeError(SemaphoreAcquireFailureException());
     }
   }
 }

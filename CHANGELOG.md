@@ -1,3 +1,6 @@
+# 3.3.1
+  - Fixed exception throwing when canceling waiters
+
 # 3.3.0
   - Added `UnfairLock` and `UnfairSemaphore`
 

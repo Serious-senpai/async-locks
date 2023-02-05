@@ -53,7 +53,7 @@ class Event {
   /// to return). This function throws an [EventCancelledException] to all these futures.
   void cancelAll() {
     for (var waiter in _waiters) {
-      waiter.completeError(EventCancelledException);
+      waiter.completeError(EventCancelledException());
     }
 
     _waiters.clear();

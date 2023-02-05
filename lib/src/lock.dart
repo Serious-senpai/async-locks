@@ -72,7 +72,7 @@ class Lock {
   void cancelAll() {
     while (_waiters.isNotEmpty) {
       var waiter = _waiters.removeFirst();
-      waiter.completeError(LockAcquireFailureException);
+      waiter.completeError(LockAcquireFailureException());
     }
   }
 }
