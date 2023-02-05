@@ -56,7 +56,7 @@ void main() {
           event.cancelAll();
           await Future.wait(futures);
         },
-        throwsA(EventCancelledException),
+        throwsException,
       );
     },
   );

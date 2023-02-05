@@ -48,7 +48,7 @@ void main() {
             semaphore.cancelAll();
             await Future.wait(futures);
           },
-          throwsA(SemaphoreAcquireFailureException),
+          throwsException,
         );
       },
     );

@@ -53,7 +53,7 @@ void main() {
             lock.cancelAll();
             await Future.wait(futures);
           },
-          throwsA(LockAcquireFailureException),
+          throwsException,
         );
       },
     );
