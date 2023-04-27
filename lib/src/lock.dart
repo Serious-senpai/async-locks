@@ -1,22 +1,10 @@
 part of async_locks;
 
-/// Mutex lock to guarantee exclusive access to a shared state.
-///
-/// A lock object can be in one of the two states: "locked" or "unlocked".
-///
-/// If the lock is "locked", all futures which call [acquire] will be put in a waiting queue
-/// and will proceed in order for each [release] call.
-///
-/// If the lock is "unlocked", calling [acquire] will set the lock to "locked" state and
-/// return immediately.
-///
-/// See also: [Python documentation](https://docs.python.org/3.9/library/asyncio-sync.html#asyncio.Lock)
-class Lock {
+abstract class _Lock {
   final _waiters = ListQueue<_FutureWaiter>();
   bool _locked = false;
 
-  /// Create a new [Lock] object.
-  Lock();
+  _Lock();
 
   /// Whether this lock is acquired.
   bool get locked => _locked;
@@ -67,7 +55,7 @@ class Lock {
     }
   }
 
-  /// Cancel all futures waiting for this [Lock] to be available by throwing a
+  /// Cancel all futures waiting for this lock to be available by throwing a
   /// [LockAcquireFailureException] to them.
   void cancelAll() {
     while (_waiters.isNotEmpty) {
@@ -77,9 +65,28 @@ class Lock {
   }
 }
 
+/// Mutex lock to guarantee exclusive access to a shared state.
+///
+/// A lock object can be in one of the two states: "locked" or "unlocked".
+///
+/// If the lock is "locked", all futures which call [acquire] will be put in a waiting queue
+/// and will proceed in order for each [release] call.
+///
+/// If the lock is "unlocked", calling [acquire] will set the lock to "locked" state and
+/// return immediately.
+///
+/// See also: [Python documentation](https://docs.python.org/3.9/library/asyncio-sync.html#asyncio.Lock)
+class Lock extends _Lock {
+  /// Create a new [Lock] object.
+  Lock();
+
+  @override
+  _FutureWaiter _getNextWaiter() => _waiters.removeFirst();
+}
+
 /// An [UnfairLock] object is identical to a [Lock] excepts that it wakes up the
 /// last future that called [acquire] instead of the first
-class UnfairLock extends Lock {
+class UnfairLock extends _Lock {
   /// Create a new [UnfairLock] object.
   UnfairLock();
 

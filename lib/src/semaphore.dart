@@ -1,20 +1,10 @@
 part of async_locks;
 
-/// Semaphore object which allows a number of futures to acquire it.
-///
-/// A semaphore object keeps track of an internal counter. The internal counter is decremented
-/// each time a future completes [acquire] and incremented for each [release] call.
-///
-/// When multiple futures are waiting for the semaphore, they will be put in a queue and only
-/// the first one will proceed when the semaphore is available.
-///
-/// See also: [Python documentation](https://docs.python.org/3.9/library/asyncio-sync.html#asyncio.Semaphore)
-class Semaphore {
+abstract class _Semaphore {
   final _waiters = ListQueue<_FutureWaiter>();
   int _value;
 
-  /// Create a new [Semaphore] object with the initial internal counter set to [value].
-  Semaphore(int value) : _value = value;
+  _Semaphore(int value) : _value = value;
 
   /// Whether this semaphore cannot be acquired immediately.
   bool get locked => _value == 0;
@@ -49,7 +39,7 @@ class Semaphore {
     }
   }
 
-  _FutureWaiter _getNextWaiter() => _waiters.removeFirst();
+  _FutureWaiter _getNextWaiter();
 
   /// Acquire the semaphore, asynchronously run [func] and release the semaphore afterwards.
   ///
@@ -64,7 +54,7 @@ class Semaphore {
     }
   }
 
-  /// Cancel all futures waiting for this [Semaphore] to be available by throwing a
+  /// Cancel all futures waiting for this semaphore to be available by throwing a
   /// [SemaphoreAcquireFailureException] to them.
   void cancelAll() {
     while (_waiters.isNotEmpty) {
@@ -74,10 +64,27 @@ class Semaphore {
   }
 }
 
+/// Semaphore object which allows a number of futures to acquire it.
+///
+/// A semaphore object keeps track of an internal counter. The internal counter is decremented
+/// each time a future completes [acquire] and incremented for each [release] call.
+///
+/// When multiple futures are waiting for the semaphore, they will be put in a queue and only
+/// the first one will proceed when the semaphore is available.
+///
+/// See also: [Python documentation](https://docs.python.org/3.9/library/asyncio-sync.html#asyncio.Semaphore)
+class Semaphore extends _Semaphore {
+  /// Create a new [Semaphore] object with the initial internal counter set to [value].
+  Semaphore(int value) : super(value);
+
+  @override
+  _FutureWaiter _getNextWaiter() => _waiters.removeFirst();
+}
+
 /// A [UnfairSemaphore] object is identical to a [Semaphore] excepts that it wakes up the
 /// last future that called [acquire] instead of the first
-class UnfairSemaphore extends Semaphore {
-  /// Create a new [UnfairSemaphore] object.
+class UnfairSemaphore extends _Semaphore {
+  /// Create a new [UnfairSemaphore] object with the initial internal counter set to [value].
   UnfairSemaphore(int value) : super(value);
 
   @override
