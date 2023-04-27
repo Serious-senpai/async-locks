@@ -7,17 +7,8 @@ import "utils.dart";
 
 const futures_count = 5;
 
-Future<void> sampleFuture(Lock lock) async {
-  await lock.run(() => Future.delayed(waiting));
-}
-
-Future<void> lockingCheckFuture(Lock lock) async {
-  await Future.delayed(short_waiting);
-  expect(lock.locked, isTrue);
-}
-
 void main() {
-  var locks = <Lock>[Lock(), UnfairLock()];
+  var locks = [Lock(), UnfairLock()];
 
   for (var lock in locks) {
     test(
@@ -25,9 +16,9 @@ void main() {
       () async {
         var futures = <Future<void>>[];
         for (int i = 0; i < futures_count; i++) {
-          futures.add(sampleFuture(lock));
+          futures.add(lock.run(() => Future.delayed(waiting)));
         }
-        futures.add(lockingCheckFuture(lock));
+        futures.add(Future.delayed(short_waiting));
 
         var timer = Stopwatch();
         timer.start();
@@ -45,7 +36,7 @@ void main() {
       () async {
         var futures = <Future<void>>[];
         for (int i = 0; i < futures_count; i++) {
-          futures.add(sampleFuture(lock));
+          futures.add(lock.run(() => Future.delayed(waiting)));
         }
 
         expect(

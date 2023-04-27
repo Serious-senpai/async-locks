@@ -8,12 +8,8 @@ import "utils.dart";
 const futures_count = 20;
 const concurrency = 4;
 
-Future<void> sampleFuture(Semaphore semaphore) async {
-  await semaphore.run(() => Future.delayed(waiting));
-}
-
 void main() {
-  var semaphores = <Semaphore>[Semaphore(concurrency), UnfairSemaphore(concurrency)];
+  var semaphores = [Semaphore(concurrency), UnfairSemaphore(concurrency)];
 
   for (var semaphore in semaphores) {
     test(
@@ -21,7 +17,7 @@ void main() {
       () async {
         var futures = <Future<void>>[];
         for (int i = 0; i < futures_count; i++) {
-          futures.add(sampleFuture(semaphore));
+          futures.add(semaphore.run(() => Future.delayed(waiting)));
         }
 
         var timer = Stopwatch();
@@ -30,7 +26,7 @@ void main() {
         timer.stop();
 
         expect(semaphore.locked, isFalse);
-        expect(timer.elapsedMilliseconds, approximates(1000 * futures_count / concurrency, 100));
+        expect(timer.elapsedMilliseconds, approximates(1000 * (futures_count / concurrency).ceil(), 100));
         print("Elapsed time: ${timer.elapsedMilliseconds} ms");
       },
     );
@@ -40,7 +36,7 @@ void main() {
       () async {
         var futures = <Future<void>>[];
         for (int i = 0; i < futures_count; i++) {
-          futures.add(sampleFuture(semaphore));
+          futures.add(semaphore.run(() => Future.delayed(waiting)));
         }
 
         expect(
