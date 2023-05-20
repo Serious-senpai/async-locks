@@ -1,3 +1,6 @@
+# 3.3.2
+  - Updated documentation
+
 # 3.3.1
   - Fixed exception throwing when canceling waiters
 
