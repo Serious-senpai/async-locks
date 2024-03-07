@@ -1,4 +1,4 @@
-part of async_locks;
+part of "../async_locks.dart";
 
 abstract class _Lock {
   final _waiters = ListQueue<_FutureWaiter>();

@@ -13,7 +13,6 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest]
-        sdk: [2.19.6, 3.3.1]
 
     steps:
 
@@ -22,8 +21,6 @@ jobs:
 
     - name: Setup Dart
       uses: dart-lang/setup-dart@v1.6.2
-      with:
-        sdk: ${{ matrix.sdk }}
 
     - name: Install dependencies
       run: dart pub get

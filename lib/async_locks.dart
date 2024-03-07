@@ -1,4 +1,7 @@
-/// Synchronization primitives for asynchronous Dart code.
+/// Provides a suite of synchronization primitives designed to streamline the coordination of
+/// asynchronous operations in your Dart applications. Inspired by Python's established concurrency
+/// features, this package offers a familiar and intuitive approach to managing shared resources
+/// and preventing race conditions in asynchronous code.
 ///
 /// See also:
 /// - [Python documentation](https://docs.python.org/3.9/library/asyncio-sync.html)

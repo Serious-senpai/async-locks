@@ -1,4 +1,4 @@
-part of async_locks;
+part of "../async_locks.dart";
 
 /// Event object to notify multiple futures that an event has happened.
 ///
