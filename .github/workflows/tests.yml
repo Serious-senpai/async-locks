@@ -13,7 +13,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest]
-        sdk: [2.18.7, 2.19.1]
+        sdk: [2.19.6, 3.3.1]
 
     steps:
 
