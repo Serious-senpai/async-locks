@@ -6,7 +6,7 @@ repository: https://github.com/Serious-senpai/async-locks
 issue_tracker: https://github.com/Serious-senpai/async-locks/issues
 
 environment:
-  sdk: ">=2.18.1 <4.0.0"
+  sdk: ">=3.0.0 <4.0.0"
 
 dev_dependencies:
   lints: ^3.0.0
