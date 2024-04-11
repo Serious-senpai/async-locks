@@ -1,5 +1,8 @@
+# 3.3.4
+  - Improve documentation and example
+
 # 3.3.3
-  - Added support Dart 3
+  - Added support for Dart 3
   - Minor documentation improvements
 
 # 3.3.2
