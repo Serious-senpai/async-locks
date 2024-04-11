@@ -75,7 +75,7 @@ abstract class _Lock {
 /// If the lock is "unlocked", calling [acquire] will set the lock to "locked" state and
 /// return immediately.
 ///
-/// See also: [Python documentation](https://docs.python.org/3.9/library/asyncio-sync.html#asyncio.Lock)
+/// See also: [Python documentation](https://docs.python.org/3/library/asyncio-sync.html#asyncio.Lock)
 class Lock extends _Lock {
   /// Create a new [Lock] object.
   Lock();

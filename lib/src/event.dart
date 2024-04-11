@@ -9,7 +9,7 @@ part of "../async_locks.dart";
 /// The internal flag can be switched by [set] and [clear] methods. The [isSet] property check
 /// if the flag is currently `true`.
 ///
-/// See also: [Python documentation](https://docs.python.org/3.9/library/asyncio-sync.html#asyncio.Event)
+/// See also: [Python documentation](https://docs.python.org/3/library/asyncio-sync.html#asyncio.Event)
 class Event {
   final _waiters = <_FutureWaiter>[];
   bool _flag = false;

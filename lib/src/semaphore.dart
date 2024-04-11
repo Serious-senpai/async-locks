@@ -72,7 +72,7 @@ abstract class _Semaphore {
 /// When multiple futures are waiting for the semaphore, they will be put in a queue and only
 /// the first one will proceed when the semaphore is available.
 ///
-/// See also: [Python documentation](https://docs.python.org/3.9/library/asyncio-sync.html#asyncio.Semaphore)
+/// See also: [Python documentation](https://docs.python.org/3/library/asyncio-sync.html#asyncio.Semaphore)
 class Semaphore extends _Semaphore {
   /// Create a new [Semaphore] object with the initial internal counter set to [value].
   Semaphore(int value) : super(value);

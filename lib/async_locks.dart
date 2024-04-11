@@ -1,10 +1,10 @@
 /// Provides a suite of synchronization primitives designed to streamline the coordination of
-/// asynchronous operations in your Dart applications. Inspired by Python's established concurrency
+/// asynchronous operations in Dart applications. Inspired by Python's established concurrency
 /// features, this package offers a familiar and intuitive approach to managing shared resources
 /// and preventing race conditions in asynchronous code.
 ///
 /// See also:
-/// - [Python documentation](https://docs.python.org/3.9/library/asyncio-sync.html)
+/// - [Python documentation](https://docs.python.org/3/library/asyncio-sync.html)
 library async_locks;
 
 import "dart:async";
