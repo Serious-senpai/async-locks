@@ -101,7 +101,7 @@ class Lock extends _Lock {
 }
 
 /// An [UnfairLock] object is identical to a [Lock] excepts that it wakes up the
-/// last future that called [acquire] instead of the first (waiting futures are
+/// last future that called [acquire] instead of the first (i.e. waiting futures are
 /// put in a LIFO queue).
 class UnfairLock extends _Lock {
   /// Create a new [UnfairLock] object.

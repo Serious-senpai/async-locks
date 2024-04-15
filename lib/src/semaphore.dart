@@ -115,11 +115,8 @@ class BoundedSemaphore extends Semaphore {
       : _initial = value,
         super(value);
 
-  /// Release a permit from the semaphore.
-  ///
-  /// This method releases a permit from the semaphore, allowing other threads to
-  /// acquire it. If the value of the semaphore is greater than the initial value,
-  /// a [BoundedSemaphoreLimitException] is thrown.
+  /// Release a permit from the semaphore. If the value of the semaphore is greater than the
+  /// initial value, a [BoundedSemaphoreLimitException] is thrown.
   @override
   void release() {
     super.release();
