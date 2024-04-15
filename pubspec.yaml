@@ -1,6 +1,6 @@
 name: async_locks
-description: Synchronization primitives for asynchronous Dart code: Event, Lock and Semaphore
 version: 3.3.4
+description: "Synchronization primitives for asynchronous Dart code: Event, Lock and Semaphore"
 homepage: https://github.com/Serious-senpai/async-locks
 repository: https://github.com/Serious-senpai/async-locks
 issue_tracker: https://github.com/Serious-senpai/async-locks/issues
@@ -11,3 +11,7 @@ environment:
 dev_dependencies:
   lints: ^3.0.0
   test: ^1.25.2
+
+topics:
+  - async
+  - concurrency
