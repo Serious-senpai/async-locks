@@ -13,3 +13,6 @@ class LockAcquireFailureException extends AsyncLocksException {}
 
 /// Exception thrown to futures cancelled by [Semaphore.cancelAll] or [UnfairSemaphore.cancelAll]
 class SemaphoreAcquireFailureException extends AsyncLocksException {}
+
+/// Exception that may be thrown in [BoundedSemaphore.release]
+class BoundedSemaphoreLimitException extends AsyncLocksException {}

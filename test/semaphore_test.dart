@@ -9,8 +9,7 @@ const futures_count = 20;
 const concurrency = 4;
 
 void main() {
-  var semaphores = [Semaphore(concurrency), UnfairSemaphore(concurrency)];
-
+  var semaphores = [Semaphore(concurrency), BoundedSemaphore(concurrency), UnfairSemaphore(concurrency)];
   for (var semaphore in semaphores) {
     test(
       "Testing control flow: $semaphore",
@@ -49,4 +48,12 @@ void main() {
       },
     );
   }
+
+  test(
+    "BoundedSemaphore release limit",
+    () async {
+      var boundedSemaphore = BoundedSemaphore(concurrency);
+      expect(boundedSemaphore.release, throwsA(isA<BoundedSemaphoreLimitException>()));
+    },
+  );
 }

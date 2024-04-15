@@ -67,13 +67,29 @@ abstract class _Lock {
 
 /// Mutex lock to guarantee exclusive access to a shared state.
 ///
-/// A lock object can be in one of the two states: "locked" or "unlocked".
+/// A [Lock] object can be in one of two states: "locked" or "unlocked".
 ///
-/// If the lock is "locked", all futures which call [acquire] will be put in a waiting queue
+/// If the lock is "locked", all futures that call [acquire] will be put in a waiting FIFO queue
 /// and will proceed in order for each [release] call.
 ///
-/// If the lock is "unlocked", calling [acquire] will set the lock to "locked" state and
+/// If the lock is "unlocked", calling [acquire] will set the lock to the "locked" state and
 /// return immediately.
+///
+/// Example usage:
+/// ```dart
+/// final lock = Lock();
+///
+/// // Acquire the lock
+/// await lock.acquire();
+///
+/// try {
+///   // Perform exclusive operations on the shared state
+///   // ...
+/// } finally {
+///   // Release the lock
+///   lock.release();
+/// }
+/// ```
 ///
 /// See also: [Python documentation](https://docs.python.org/3/library/asyncio-sync.html#asyncio.Lock)
 class Lock extends _Lock {
@@ -85,7 +101,8 @@ class Lock extends _Lock {
 }
 
 /// An [UnfairLock] object is identical to a [Lock] excepts that it wakes up the
-/// last future that called [acquire] instead of the first
+/// last future that called [acquire] instead of the first (waiting futures are
+/// put in a LIFO queue).
 class UnfairLock extends _Lock {
   /// Create a new [UnfairLock] object.
   UnfairLock();

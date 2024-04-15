@@ -64,13 +64,26 @@ abstract class _Semaphore {
   }
 }
 
-/// Semaphore object which allows a number of futures to acquire it.
+/// A semaphore object that allows a limited number of futures to acquire it.
 ///
-/// A semaphore object keeps track of an internal counter. The internal counter is decremented
-/// each time a future completes [acquire] and incremented for each [release] call.
+/// A semaphore is a synchronization primitive that maintains a counter indicating the number of
+/// available resources or permits. In this implementation, the semaphore keeps track of an internal
+/// counter. The counter is decremented each time a future acquires the semaphore using the [acquire]
+/// method and incremented each time the semaphore is released using the [release] method.
 ///
-/// When multiple futures are waiting for the semaphore, they will be put in a queue and only
-/// the first one will proceed when the semaphore is available.
+/// When multiple futures are waiting for the semaphore, they will be put in a FIFO queue and only the
+/// first one will proceed when the semaphore becomes available.
+///
+/// The [Semaphore] class is inspired by the Python `asyncio.Semaphore` class.
+///
+/// Example usage:
+/// ```dart
+/// final semaphore = Semaphore(2); // Create a semaphore with a limit of 2 permits
+///
+/// await semaphore.acquire(); // Acquire a permit
+/// // Perform some asynchronous operation
+/// semaphore.release(); // Release the permit
+/// ```
 ///
 /// See also: [Python documentation](https://docs.python.org/3/library/asyncio-sync.html#asyncio.Semaphore)
 class Semaphore extends _Semaphore {
@@ -81,8 +94,45 @@ class Semaphore extends _Semaphore {
   _FutureWaiter _getNextWaiter() => _waiters.removeFirst();
 }
 
-/// A [UnfairSemaphore] object is identical to a [Semaphore] excepts that it wakes up the
-/// last future that called [acquire] instead of the first
+/// A semaphore object that enforces an upper bound on the internal counter.
+///
+/// A bounded semaphore is a synchronization primitive that limits the number of
+/// concurrent accesses to a shared resource. It maintains a counter that represents
+/// the number of available resources. When a future wants to access the resource,
+/// it must acquire a permit from the semaphore. If no permits are available, the
+/// thread will be blocked until a permit becomes available.
+///
+/// This implementation extends the [Semaphore] class and adds additional logic to
+/// enforce a limit on the number of permits. If the value of the semaphore exceeds
+/// the initial value, a [BoundedSemaphoreLimitException] is thrown when releasing
+/// a permit.
+class BoundedSemaphore extends Semaphore {
+  final int _initial;
+
+  /// Construct a new [BoundedSemaphore] object with the initial internal counter set to [value].
+  /// This provided [value] is also the upper bound of the internal counter.
+  BoundedSemaphore(int value)
+      : _initial = value,
+        super(value);
+
+  /// Release a permit from the semaphore.
+  ///
+  /// This method releases a permit from the semaphore, allowing other threads to
+  /// acquire it. If the value of the semaphore is greater than the initial value,
+  /// a [BoundedSemaphoreLimitException] is thrown.
+  @override
+  void release() {
+    super.release();
+    if (_value > _initial) {
+      throw BoundedSemaphoreLimitException();
+    }
+  }
+}
+
+/// A [UnfairSemaphore] is a synchronization primitive that limits the number of concurrent
+/// accesses to a shared resource. It is similar to a [Semaphore], but it wakes up the last
+/// future that called [acquire] instead of the first (i.e. waiting futures are put in a
+/// LIFO queue).
 class UnfairSemaphore extends _Semaphore {
   /// Create a new [UnfairSemaphore] object with the initial internal counter set to [value].
   UnfairSemaphore(int value) : super(value);
