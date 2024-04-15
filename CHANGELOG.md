@@ -1,3 +1,7 @@
+# 3.4.0
+  - Added `BoundedSemaphore` class
+  - Improve package metadata and documentation
+
 # 3.3.4
   - Improve documentation and example
 
