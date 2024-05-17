@@ -11,7 +11,7 @@ class EventCancelledException extends AsyncLocksException {}
 /// Exception thrown to futures cancelled by [Lock.cancelAll] or [UnfairLock.cancelAll]
 class LockAcquireFailureException extends AsyncLocksException {}
 
-/// Exception thrown to futures cancelled by [Semaphore.cancelAll] or [UnfairSemaphore.cancelAll]
+/// Exception thrown to futures cancelled by [BoundedSemaphore.cancelAll], [Semaphore.cancelAll] or [UnfairSemaphore.cancelAll]
 class SemaphoreAcquireFailureException extends AsyncLocksException {}
 
 /// Exception that may be thrown in [BoundedSemaphore.release]

@@ -74,8 +74,6 @@ abstract class _Semaphore {
 /// When multiple futures are waiting for the semaphore, they will be put in a FIFO queue and only the
 /// first one will proceed when the semaphore becomes available.
 ///
-/// The [Semaphore] class is inspired by the Python `asyncio.Semaphore` class.
-///
 /// Example usage:
 /// ```dart
 /// final semaphore = Semaphore(2); // Create a semaphore with a limit of 2 permits
