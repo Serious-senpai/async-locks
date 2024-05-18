@@ -9,7 +9,7 @@ const futures_count = 20;
 const concurrency = 4;
 
 void main() {
-  var semaphores = [Semaphore(concurrency), BoundedSemaphore(concurrency), UnfairSemaphore(concurrency)];
+  final semaphores = [Semaphore(concurrency), BoundedSemaphore(concurrency)];
   for (var semaphore in semaphores) {
     test(
       "Testing control flow: $semaphore",

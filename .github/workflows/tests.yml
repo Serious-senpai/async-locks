@@ -1,4 +1,4 @@
-name: Package Test
+name: Package test
 
 on: push
 
@@ -8,11 +8,11 @@ permissions:
 
 jobs:
   test:
-    name: Run package tests
+    name: Run tests
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest]
+        os: [macos-latest, ubuntu-latest, windows-latest]
 
     steps:
 

@@ -8,10 +8,10 @@ class AsyncLocksException implements Exception {}
 /// Exception thrown to futures cancelled by [Event.cancelAll]
 class EventCancelledException extends AsyncLocksException {}
 
-/// Exception thrown to futures cancelled by [Lock.cancelAll] or [UnfairLock.cancelAll]
+/// Exception thrown to futures cancelled by [Lock.cancelAll]
 class LockAcquireFailureException extends AsyncLocksException {}
 
-/// Exception thrown to futures cancelled by [BoundedSemaphore.cancelAll], [Semaphore.cancelAll] or [UnfairSemaphore.cancelAll]
+/// Exception thrown to futures cancelled by [BoundedSemaphore.cancelAll] or [Semaphore.cancelAll]
 class SemaphoreAcquireFailureException extends AsyncLocksException {}
 
 /// Exception that may be thrown in [BoundedSemaphore.release]

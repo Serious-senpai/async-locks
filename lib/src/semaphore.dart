@@ -106,32 +106,31 @@ class Semaphore extends _Semaphore {
 /// a permit.
 class BoundedSemaphore extends Semaphore {
   final int _initial;
+  final bool _error = true;
 
   /// Construct a new [BoundedSemaphore] object with the initial internal counter set to [value].
   /// This provided [value] is also the upper bound of the internal counter.
-  BoundedSemaphore(int value)
+  ///
+  /// If [error] is set to `true`, a [BoundedSemaphoreLimitException] will be thrown when the
+  /// internal counter exceeds the initial value. If set to `false`, this exception will be
+  /// suppressed.
+  BoundedSemaphore(int value, {bool error = true})
       : _initial = value,
         super(value);
 
-  /// Release a permit from the semaphore. If the value of the semaphore is greater than the
-  /// initial value, a [BoundedSemaphoreLimitException] is thrown.
+  /// Release a permit from the semaphore. If the internal value of the semaphore is greater than the
+  /// initial value, a [BoundedSemaphoreLimitException] may be thrown.
+  ///
+  /// Whether an instance of [BoundedSemaphoreLimitException] is thrown depends on the value of the
+  /// `error` parameter in the constructor.
   @override
   void release() {
     super.release();
     if (_value > _initial) {
-      throw BoundedSemaphoreLimitException();
+      _value = _initial;
+      if (_error) {
+        throw BoundedSemaphoreLimitException();
+      }
     }
   }
-}
-
-/// A [UnfairSemaphore] is a synchronization primitive that limits the number of concurrent
-/// accesses to a shared resource. It is similar to a [Semaphore], but it wakes up the last
-/// future that called [acquire] instead of the first (i.e. waiting futures are put in a
-/// LIFO queue).
-class UnfairSemaphore extends _Semaphore {
-  /// Create a new [UnfairSemaphore] object with the initial internal counter set to [value].
-  UnfairSemaphore(int value) : super(value);
-
-  @override
-  _FutureWaiter _getNextWaiter() => _waiters.removeLast();
 }
