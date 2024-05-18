@@ -1,5 +1,5 @@
 name: async_locks
-version: 3.4.0
+version: 4.0.0
 description: "Synchronization primitives for asynchronous Dart code: Event, Lock and Semaphore"
 homepage: https://github.com/Serious-senpai/async-locks
 repository: https://github.com/Serious-senpai/async-locks

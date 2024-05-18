@@ -1,3 +1,7 @@
+# 4.0.0
+  - Remove `Unfair*` primitives from the library
+  - Add `error` argument to `BoundedSemaphore` constructor, indicating whether `BoundedSemaphoreLimitException` should be thrown
+
 # 3.4.0
   - Added `BoundedSemaphore` class
   - Improve package metadata and documentation
