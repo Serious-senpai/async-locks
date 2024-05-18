@@ -52,8 +52,11 @@ void main() {
   test(
     "BoundedSemaphore release limit",
     () async {
-      var boundedSemaphore = BoundedSemaphore(concurrency);
+      final boundedSemaphore = BoundedSemaphore(concurrency);
       expect(boundedSemaphore.release, throwsA(isA<BoundedSemaphoreLimitException>()));
+
+      final boundedSemaphoreNoError = BoundedSemaphore(concurrency, error: false);
+      expect(boundedSemaphoreNoError.release, isNot(throwsA(isA<BoundedSemaphoreLimitException>())));
     },
   );
 }

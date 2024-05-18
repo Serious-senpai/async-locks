@@ -1,6 +1,8 @@
 part of "../async_locks.dart";
 
-abstract class _Semaphore {
+/// Create this private abstract base class and inherit multiple classes from it so that the
+/// docs for identical members are copied.
+abstract class _Semaphore extends _Acquirable {
   final _waiters = ListQueue<_FutureWaiter>();
   int _value;
 
@@ -17,6 +19,7 @@ abstract class _Semaphore {
   /// Acquire the semaphore.
   /// If the internal counter is greater then 0, decrease it by 1 and return immediately.
   /// If the internal counter equals 0, wait asynchronously until the semaphore is available.
+  @override
   Future<void> acquire() async {
     if (_value > 0 && _waiters.isEmpty) {
       _value--;
@@ -30,6 +33,7 @@ abstract class _Semaphore {
   }
 
   /// Increase the internal counter by 1 and may wake up a future waiting to acquire this semaphore.
+  @override
   void release() {
     if (_waiters.isEmpty) {
       _value++;
@@ -44,14 +48,9 @@ abstract class _Semaphore {
   /// Acquire the semaphore, asynchronously run [func] and release the semaphore afterwards.
   ///
   /// The returned value is the result of [func]
-  Future<T> run<T>(Future<T> Function() func) async {
-    await acquire();
-    try {
-      var result = await func();
-      return result;
-    } finally {
-      release();
-    }
+  @override
+  Future<T> run<T>(Future<T> Function() func) {
+    return super.run(func);
   }
 
   /// Cancel all futures waiting for this semaphore to be available by throwing a
@@ -106,7 +105,7 @@ class Semaphore extends _Semaphore {
 /// a permit.
 class BoundedSemaphore extends Semaphore {
   final int _initial;
-  final bool _error = true;
+  final bool _error;
 
   /// Construct a new [BoundedSemaphore] object with the initial internal counter set to [value].
   /// This provided [value] is also the upper bound of the internal counter.
@@ -116,6 +115,7 @@ class BoundedSemaphore extends Semaphore {
   /// suppressed.
   BoundedSemaphore(int value, {bool error = true})
       : _initial = value,
+        _error = error,
         super(value);
 
   /// Release a permit from the semaphore. If the internal value of the semaphore is greater than the

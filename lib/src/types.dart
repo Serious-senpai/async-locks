@@ -2,6 +2,21 @@ part of "../async_locks.dart";
 
 typedef _FutureWaiter = Completer<void>;
 
+abstract class _Acquirable {
+  Future<void> acquire();
+  void release();
+
+  Future<T> run<T>(Future<T> Function() func) async {
+    await acquire();
+    try {
+      var result = await func();
+      return result;
+    } finally {
+      release();
+    }
+  }
+}
+
 /// Base class for all exceptions from this package
 class AsyncLocksException implements Exception {}
 
