@@ -1,3 +1,6 @@
+# 4.0.1
+  - Remove duplicate documentation section
+
 # 4.0.0
   - Remove `Unfair*` primitives from the library
   - Add `error` argument to `BoundedSemaphore` constructor, indicating whether `BoundedSemaphoreLimitException` should be thrown
