@@ -22,15 +22,15 @@ Future<void> mainFuture() async {
 
 void main() {
   test(
-    "Testing control flow: $event",
+    "Control flow test: $event",
     () async {
-      var futures = <Future<void>>[];
+      final futures = <Future<void>>[];
       for (int i = 0; i < futures_count; i++) {
         futures.add(sampleFuture());
       }
       futures.add(mainFuture());
 
-      var timer = Stopwatch();
+      final timer = Stopwatch();
       timer.start();
       await Future.wait(futures);
       timer.stop();
@@ -42,11 +42,11 @@ void main() {
   );
 
   test(
-    "Test event waiting cancellation: $event",
+    "Event waiting cancellation test: $event",
     () async {
       event.clear();
 
-      var futures = <Future<void>>[];
+      final futures = <Future<void>>[];
       for (int i = 0; i < futures_count; i++) {
         futures.add(sampleFuture());
       }

@@ -9,7 +9,7 @@ abstract class _Acquirable {
   Future<T> run<T>(Future<T> Function() func) async {
     await acquire();
     try {
-      var result = await func();
+      final result = await func();
       return result;
     } finally {
       release();

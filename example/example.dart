@@ -18,13 +18,13 @@ class Program {
     await Future.wait([runFuture(1), runFuture(2), runFuture(3), runFuture(4)]);
 
     // Read and print file content to stdout
-    var content = await file.readAsString();
+    final content = await file.readAsString();
     print(content);
   }
 }
 
 void main() async {
-  var program = Program();
+  final program = Program();
 
   // Write header to example file
   await program.file.writeAsString("EXAMPLE FILE\n");

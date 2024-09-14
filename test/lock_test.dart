@@ -11,15 +11,15 @@ void main() {
   final lock = Lock();
 
   test(
-    "Testing control flow: $lock",
+    "Control flow test: $lock",
     () async {
-      var futures = <Future<void>>[];
+      final futures = <Future<void>>[];
       for (int i = 0; i < futures_count; i++) {
         futures.add(lock.run(() => Future.delayed(waiting)));
       }
       futures.add(Future.delayed(short_waiting));
 
-      var timer = Stopwatch();
+      final timer = Stopwatch();
       timer.start();
       await Future.wait(futures);
       timer.stop();
@@ -31,9 +31,9 @@ void main() {
   );
 
   test(
-    "Test lock acquire cancellation: $lock",
+    "Lock acquisition cancellation test: $lock",
     () async {
-      var futures = <Future<void>>[];
+      final futures = <Future<void>>[];
       for (int i = 0; i < futures_count; i++) {
         futures.add(lock.run(() => Future.delayed(waiting)));
       }

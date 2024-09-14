@@ -10,16 +10,16 @@ const concurrency = 4;
 
 void main() {
   final semaphores = [Semaphore(concurrency), BoundedSemaphore(concurrency)];
-  for (var semaphore in semaphores) {
+  for (final semaphore in semaphores) {
     test(
-      "Testing control flow: $semaphore",
+      "Control flow test: $semaphore",
       () async {
-        var futures = <Future<void>>[];
+        final futures = <Future<void>>[];
         for (int i = 0; i < futures_count; i++) {
           futures.add(semaphore.run(() => Future.delayed(waiting)));
         }
 
-        var timer = Stopwatch();
+        final timer = Stopwatch();
         timer.start();
         await Future.wait(futures);
         timer.stop();
@@ -31,9 +31,9 @@ void main() {
     );
 
     test(
-      "Test semaphore acquire cancellation: $semaphore",
+      "Semaphore acquire cancellation test: $semaphore",
       () async {
-        var futures = <Future<void>>[];
+        final futures = <Future<void>>[];
         for (int i = 0; i < futures_count; i++) {
           futures.add(semaphore.run(() => Future.delayed(waiting)));
         }
@@ -50,7 +50,7 @@ void main() {
   }
 
   test(
-    "BoundedSemaphore release limit",
+    "BoundedSemaphore release limit test",
     () async {
       final boundedSemaphore = BoundedSemaphore(concurrency);
       expect(boundedSemaphore.release, throwsA(isA<BoundedSemaphoreLimitException>()));

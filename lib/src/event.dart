@@ -28,7 +28,7 @@ class Event {
     if (_flag) return;
     _flag = true;
 
-    for (var waiter in _waiters) {
+    for (final waiter in _waiters) {
       if (!waiter.isCompleted) waiter.complete();
     }
 
@@ -43,7 +43,7 @@ class Event {
   Future<void> wait() async {
     if (_flag) return;
 
-    var waiter = _FutureWaiter();
+    final waiter = _FutureWaiter();
     _waiters.add(waiter);
 
     return waiter.future;
@@ -52,7 +52,7 @@ class Event {
   /// Cancel all futures waiting for this [Event] to be set (those that are waiting for [wait]
   /// to return). This function throws an [EventCancelledException] to all these futures.
   void cancelAll() {
-    for (var waiter in _waiters) {
+    for (final waiter in _waiters) {
       waiter.completeError(EventCancelledException());
     }
 

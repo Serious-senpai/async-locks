@@ -51,7 +51,7 @@ class Lock extends _Acquirable {
       return;
     }
 
-    var waiter = _FutureWaiter();
+    final waiter = _FutureWaiter();
     _waiters.add(waiter);
 
     return waiter.future;
@@ -64,7 +64,7 @@ class Lock extends _Acquirable {
       if (_waiters.isEmpty) {
         _locked = false;
       } else {
-        var waiter = _getNextWaiter();
+        final waiter = _getNextWaiter();
         waiter.complete();
       }
     }
@@ -84,7 +84,7 @@ class Lock extends _Acquirable {
   /// [LockAcquireFailureException] to them.
   void cancelAll() {
     while (_waiters.isNotEmpty) {
-      var waiter = _waiters.removeFirst();
+      final waiter = _waiters.removeFirst();
       waiter.completeError(LockAcquireFailureException());
     }
   }

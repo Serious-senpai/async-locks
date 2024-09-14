@@ -26,7 +26,7 @@ abstract class _Semaphore extends _Acquirable {
       return;
     }
 
-    var waiter = _FutureWaiter();
+    final waiter = _FutureWaiter();
     _waiters.add(waiter);
 
     return waiter.future;
@@ -38,7 +38,7 @@ abstract class _Semaphore extends _Acquirable {
     if (_waiters.isEmpty) {
       _value++;
     } else {
-      var waiter = _getNextWaiter();
+      final waiter = _getNextWaiter();
       waiter.complete();
     }
   }
@@ -57,7 +57,7 @@ abstract class _Semaphore extends _Acquirable {
   /// [SemaphoreAcquireFailureException] to them.
   void cancelAll() {
     while (_waiters.isNotEmpty) {
-      var waiter = _waiters.removeFirst();
+      final waiter = _waiters.removeFirst();
       waiter.completeError(SemaphoreAcquireFailureException());
     }
   }
