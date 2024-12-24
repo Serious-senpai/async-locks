@@ -1,3 +1,6 @@
+# 4.0.2
+  - Update dependencies
+
 # 4.0.1
   - Remove duplicate documentation section
 
