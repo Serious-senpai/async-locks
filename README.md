@@ -2,6 +2,7 @@
 
 [![Package Test](https://github.com/Serious-senpai/async-locks/actions/workflows/tests.yml/badge.svg)](https://github.com/Serious-senpai/async-locks/actions/workflows/tests.yml)
 [![Documentation Build](https://github.com/Serious-senpai/async-locks/actions/workflows/build-docs.yml/badge.svg)](https://github.com/Serious-senpai/async-locks/actions/workflows/build-docs.yml)
+[![Pub Monthly Downloads](https://img.shields.io/pub/dm/async_locks)](https://pub.dev/packages/async_locks)
 
 **Effortlessly synchronize asynchronous operations in your Dart applications**
 
